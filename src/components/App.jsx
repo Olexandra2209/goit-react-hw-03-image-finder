@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { fetchImages } from './PixabayAPI';
 import Searchbar from './Searchbar/Searchbar';
 import ImageGallery from './ImageGallery/ImageGallery';
 import Button from './Button/Button';
@@ -29,14 +29,9 @@ class App extends Component {
   fetchImages = () => {
     const { query, page } = this.state;
 
-    const apiKey = '38287745-8ae9b1f5cab082762fa8c0628';
-
     this.setState({ isLoading: true });
 
-    axios
-      .get(
-        `https://pixabay.com/api/?q=${query}&page=${page}&key=${apiKey}&image_type=photo&orientation=horizontal&per_page=12`
-      )
+    fetchImages(query, page)
       .then(response => {
         this.setState(prevState => ({
           images: [...prevState.images, ...response.data.hits],
@@ -62,12 +57,14 @@ class App extends Component {
   render() {
     const { images, isLoading, showModal, selectedImage } = this.state;
 
+    const showLoadMoreButton = images.length > 0 && images.length % 12 === 0;
+
     return (
       <div>
         <Searchbar onSubmit={this.handleSubmit} />
         <ImageGallery images={images} onItemClick={this.openModal} />
         {isLoading && <CustomLoader />}
-        {images.length > 0 && <Button onClick={this.handleLoadMore} />}
+        {showLoadMoreButton && <Button onClick={this.handleLoadMore} />} {}
         {showModal && (
           <Modal
             showModal={showModal}
