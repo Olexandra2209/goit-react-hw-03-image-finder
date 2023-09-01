@@ -17,7 +17,10 @@ class App extends Component {
   };
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevState.query !== this.state.query) {
+    if (
+      prevState.query !== this.state.query ||
+      prevState.page !== this.state.page
+    ) {
       this.fetchImages();
     }
   }
@@ -43,7 +46,12 @@ class App extends Component {
   };
 
   handleLoadMore = () => {
-    this.fetchImages();
+    this.setState(
+      prevState => ({ page: prevState.page + 1 }),
+      () => {
+        this.fetchImages();
+      }
+    );
   };
 
   openModal = imageUrl => {
@@ -64,7 +72,7 @@ class App extends Component {
         <Searchbar onSubmit={this.handleSubmit} />
         <ImageGallery images={images} onItemClick={this.openModal} />
         {isLoading && <CustomLoader />}
-        {showLoadMoreButton && <Button onClick={this.handleLoadMore} />} {}
+        {showLoadMoreButton && <Button onClick={this.handleLoadMore} />}
         {showModal && (
           <Modal
             showModal={showModal}
