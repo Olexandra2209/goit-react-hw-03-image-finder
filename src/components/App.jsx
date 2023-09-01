@@ -38,7 +38,6 @@ class App extends Component {
       .then(response => {
         this.setState(prevState => ({
           images: [...prevState.images, ...response.data.hits],
-          page: prevState.page + 1,
         }));
       })
       .catch(error => console.error('Error fetching images', error))
@@ -46,12 +45,7 @@ class App extends Component {
   };
 
   handleLoadMore = () => {
-    this.setState(
-      prevState => ({ page: prevState.page + 1 }),
-      () => {
-        this.fetchImages();
-      }
-    );
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   openModal = imageUrl => {
